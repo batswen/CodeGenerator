@@ -103,7 +103,7 @@ public class CodeGenerator {
     }
     static int get_word(int pos) {
         int result;
-        result = ((code[pos] & 0xff) <<24) + ((code[pos + 1] & 0xff)  << 16) + ((code[pos + 2] & 0xff)  << 8) + (code[pos + 3] & 0xff) ;
+        result = ((code[pos] & 0xff) << 24) + ((code[pos + 1] & 0xff)  << 16) + ((code[pos + 2] & 0xff)  << 8) + (code[pos + 3] & 0xff) ;
         
         return result;
     }
@@ -143,7 +143,7 @@ public class CodeGenerator {
     static void code_gen(Node x) throws Exception {
         int n, p1, p2;
         if (x == null) return;
-        //System.out.println("Node: "+x.nt);
+        
         switch (x.nt) {
             case nd_None: return;
             case nd_Ident:
@@ -213,8 +213,7 @@ public class CodeGenerator {
                     code_gen(x.left);
                     code_gen(x.right);
                     emit_byte(x.nt.getMnemonic());
-                }
-                else if (arrayContains(unary_ops, x.nt)) {
+                } else if (arrayContains(unary_ops, x.nt)) {
                     code_gen(x.left);
                     emit_byte(x.nt.getMnemonic());
                 } else {
@@ -248,25 +247,12 @@ public class CodeGenerator {
                     System.out.printf("push  %d", x);
                     pc += WORDSIZE;
                     break;
-                case ADD: System.out.print("add"); break;
-                case SUB: System.out.print("sub"); break;
-                case MUL: System.out.print("mul"); break;
-                case DIV: System.out.print("div"); break;
-                case MOD: System.out.print("mod"); break;
-                case LT: System.out.print("lt"); break;
-                case GT: System.out.print("gt"); break;
-                case LE: System.out.print("le"); break;
-                case GE: System.out.print("ge"); break;
-                case EQ: System.out.print("eq"); break;
-                case NE: System.out.print("ne"); break;
-                case AND: System.out.print("and"); break;
-                case OR: System.out.print("or"); break;
-                case NEG: System.out.print("neg"); break;
-                case NOT: System.out.print("not"); break;
-                case PRTC: System.out.print("prtc"); break;
-                case PRTI: System.out.print("prti"); break;
-                case PRTS: System.out.print("prts"); break;
-                case HALT: System.out.print("halt"); break;
+                case ADD: case SUB: case MUL: case DIV: case MOD:
+                case LT: case GT: case LE: case GE: case EQ: case NE:
+                case AND: case OR: case NEG: case NOT:
+                case PRTC: case PRTI: case PRTS: case HALT:
+                    System.out.print(op.toString().toLowerCase());
+                    break;
                 case JMP:
                     x = get_word(pc);
                     System.out.printf("jmp     (%d) %d", x, pc + x);
